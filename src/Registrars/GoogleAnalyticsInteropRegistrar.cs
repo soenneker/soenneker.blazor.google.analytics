@@ -14,6 +14,6 @@ public static class GoogleAnalyticsInteropRegistrar
     /// </summary>
     public static void AddGoogleAnalyticsInterop(this IServiceCollection services)
     {
-        services.TryAddSingleton<IGoogleAnalyticsInterop, GoogleAnalyticsInterop>();
+        services.TryAddScoped<IGoogleAnalyticsInterop, GoogleAnalyticsInterop>();
     }
 }
