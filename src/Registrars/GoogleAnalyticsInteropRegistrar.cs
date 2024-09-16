@@ -10,7 +10,7 @@ namespace Soenneker.Blazor.Google.Analytics.Registrars;
 public static class GoogleAnalyticsInteropRegistrar
 {
     /// <summary>
-    /// Adds <see cref="IGoogleAnalyticsInterop"/> as a singleton service. <para/>
+    /// Adds <see cref="IGoogleAnalyticsInterop"/> as a scoped service. <para/>
     /// </summary>
     public static void AddGoogleAnalyticsInterop(this IServiceCollection services)
     {
