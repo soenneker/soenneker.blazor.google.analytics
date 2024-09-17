@@ -31,7 +31,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\src\Soenneker.Blazor.Google.Analytics.csproj" />
+        <ProjectReference Include="..\..\src\Soenneker.Blazor.Google.Analytics.csproj" />
     </ItemGroup>
 
 </Project>
