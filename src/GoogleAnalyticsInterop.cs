@@ -18,7 +18,7 @@ public class GoogleAnalyticsInterop: IGoogleAnalyticsInterop
         _logger = logger;
     }
 
-    public async ValueTask Init(string tagId, bool log = false, CancellationToken cancellationToken = default)
+    public ValueTask Init(string tagId, bool log = false, CancellationToken cancellationToken = default)
     {
         if (log)
             _logger.LogDebug("Initializing Google Analytics...");
@@ -38,6 +38,6 @@ public class GoogleAnalyticsInterop: IGoogleAnalyticsInterop
             document.head.appendChild(script);
         ";
 
-        await _jsRuntime.InvokeVoidAsync("eval", cancellationToken, script);
+        return _jsRuntime.InvokeVoidAsync("eval", cancellationToken, script);
     }
 }
