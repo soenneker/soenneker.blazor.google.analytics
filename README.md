@@ -23,7 +23,7 @@ public static async Task Main(string[] args)
 }
 ```
 
-2. Inject `IClarityInterop` within your `App.Razor` file
+2. Inject `IGoogleAnalyticsInterop` within your `App.Razor` file
 
 ```csharp
 @using Soenneker.Blazor.Google.Analytics.Abstract
