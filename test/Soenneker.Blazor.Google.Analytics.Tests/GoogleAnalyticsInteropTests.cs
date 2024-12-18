@@ -1,7 +1,7 @@
 using Soenneker.Blazor.Google.Analytics.Abstract;
 using Soenneker.Tests.FixturedUnit;
 using Xunit;
-using Xunit.Abstractions;
+
 
 namespace Soenneker.Blazor.Google.Analytics.Tests;
 
