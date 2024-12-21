@@ -26,9 +26,13 @@
         </PackageReference>
         <PackageReference Include="Soenneker.Utils.Test" Version="3.0.254" />
         <PackageReference Include="Soenneker.Tests.FixturedUnit" Version="3.0.1376" />
+<<<<<<< HEAD
         <PackageReference Include="Soenneker.Blazor.MockJsRuntime" Version="3.0.1" />
         <PackageReference Include="xUnit.v3" Version="1.0.0" />
     </ItemGroup>
+=======
+    <PackageReference Include="xUnit.v3" Version="1.0.0" /></ItemGroup>
+>>>>>>> dbe5be3ddabb8d5c1d54086f72b25f5e17a998c2
 
     <ItemGroup>
         <ProjectReference Include="..\..\src\Soenneker.Blazor.Google.Analytics.csproj" />
