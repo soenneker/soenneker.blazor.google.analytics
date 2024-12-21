@@ -19,7 +19,7 @@ dotnet add package Soenneker.Blazor.Google.Analytics
 public static async Task Main(string[] args)
 {
     ...
-    builder.Services.AddGoogleAnalyticsInterop();
+    builder.Services.AddGoogleAnalyticsInteropAsScoped();
 }
 ```
 

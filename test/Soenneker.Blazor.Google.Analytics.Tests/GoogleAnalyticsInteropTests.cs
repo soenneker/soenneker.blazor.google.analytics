@@ -8,10 +8,16 @@ namespace Soenneker.Blazor.Google.Analytics.Tests;
 [Collection("Collection")]
 public class GoogleAnalyticsInteropTests : FixturedUnitTest
 {
-    private readonly IGoogleAnalyticsInterop _interop;
+    private readonly IGoogleAnalyticsInterop _util;
 
     public GoogleAnalyticsInteropTests(Fixture fixture, ITestOutputHelper output) : base(fixture, output)
     {
-        _interop = Resolve<IGoogleAnalyticsInterop>(true);
+        _util = Resolve<IGoogleAnalyticsInterop>(true);
+    }
+
+    [Fact]
+    public void Default()
+    {
+
     }
 }
