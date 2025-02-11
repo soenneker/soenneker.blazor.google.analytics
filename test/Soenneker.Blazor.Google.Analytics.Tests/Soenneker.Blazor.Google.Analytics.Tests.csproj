@@ -19,14 +19,14 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
         <PackageReference Include="coverlet.collector" Version="6.0.4">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="Soenneker.Utils.Test" Version="3.0.269" />
-        <PackageReference Include="Soenneker.Tests.FixturedUnit" Version="3.0.1633" />
-        <PackageReference Include="Soenneker.Blazor.MockJsRuntime" Version="3.0.158" />
+        <PackageReference Include="Soenneker.Utils.Test" Version="3.0.270" />
+        <PackageReference Include="Soenneker.Tests.FixturedUnit" Version="3.0.1653" />
+        <PackageReference Include="Soenneker.Blazor.MockJsRuntime" Version="3.0.171" />
         <PackageReference Include="xUnit.v3" Version="1.1.0" />
     </ItemGroup>
 
