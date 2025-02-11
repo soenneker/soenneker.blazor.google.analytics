@@ -1,4 +1,4 @@
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Soenneker.Blazor.Google.Analytics.Abstract;
 
@@ -12,8 +12,9 @@ public static class GoogleAnalyticsInteropRegistrar
     /// <summary>
     /// Adds <see cref="IGoogleAnalyticsInterop"/> as a scoped service. <para/>
     /// </summary>
-    public static void AddGoogleAnalyticsInteropAsScoped(this IServiceCollection services)
+    public static IServiceCollection AddGoogleAnalyticsInteropAsScoped(this IServiceCollection services)
     {
         services.TryAddScoped<IGoogleAnalyticsInterop, GoogleAnalyticsInterop>();
+        return services;
     }
 }
