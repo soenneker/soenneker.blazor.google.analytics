@@ -8,7 +8,7 @@ using Soenneker.Blazor.Google.Analytics.Registrars;
 
 namespace Soenneker.Blazor.Google.Analytics.Tests;
 
-public class Fixture : UnitFixture
+public sealed class Fixture : UnitFixture
 {
     public override System.Threading.Tasks.ValueTask InitializeAsync()
     {

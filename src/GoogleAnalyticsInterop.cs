@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 namespace Soenneker.Blazor.Google.Analytics;
 
 /// <inheritdoc cref="IGoogleAnalyticsInterop"/>
-public class GoogleAnalyticsInterop: IGoogleAnalyticsInterop
+public sealed class GoogleAnalyticsInterop : IGoogleAnalyticsInterop
 {
     private readonly IJSRuntime _jsRuntime;
     private readonly ILogger<GoogleAnalyticsInterop> _logger;
@@ -25,18 +25,18 @@ public class GoogleAnalyticsInterop: IGoogleAnalyticsInterop
 
         // Does not import modules, load external scripts, etc for maximum injection speed
 
-        var script = $@"
-            var script = document.createElement('script');
-            script.src = 'https://www.googletagmanager.com/gtag/js?id={tagId}';
-            script.async = true;
-            script.onload = function () {{
-                window.dataLayer = window.dataLayer || [];
-                function gtag() {{ dataLayer.push(arguments); }}
-                gtag('js', new Date());
-                gtag('config', '{tagId}');
-            }};
-            document.head.appendChild(script);
-        ";
+        var script = $$"""
+                        var script = document.createElement('script');
+                        script.src = 'https://www.googletagmanager.com/gtag/js?id={{tagId}}';
+                        script.async = true;
+                        script.onload = function () {
+                            window.dataLayer = window.dataLayer || [];
+                            function gtag() { dataLayer.push(arguments); }
+                            gtag('js', new Date());
+                            gtag('config', '{{tagId}}');
+                        };
+                        document.head.appendChild(script);
+                       """;
 
         return _jsRuntime.InvokeVoidAsync("eval", cancellationToken, script);
     }

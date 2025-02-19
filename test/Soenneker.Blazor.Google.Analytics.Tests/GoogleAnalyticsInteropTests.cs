@@ -6,7 +6,7 @@ using Xunit;
 namespace Soenneker.Blazor.Google.Analytics.Tests;
 
 [Collection("Collection")]
-public class GoogleAnalyticsInteropTests : FixturedUnitTest
+public sealed class GoogleAnalyticsInteropTests : FixturedUnitTest
 {
     private readonly IGoogleAnalyticsInterop _util;
 
