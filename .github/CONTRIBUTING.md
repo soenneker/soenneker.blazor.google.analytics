@@ -1,4 +1,4 @@
-# Contributing to Soenneker.Blazor.Google.Analytics
+﻿# Contributing to Soenneker.Blazor.Google.Analytics
 
 We're excited that you're interested in contributing!
 
