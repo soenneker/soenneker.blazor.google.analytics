@@ -1,8 +1,11 @@
-using Soenneker.Blazor.Google.Analytics.Abstract;
-using Microsoft.JSInterop;
-using System.Threading.Tasks;
-using System.Threading;
 using Microsoft.Extensions.Logging;
+using Microsoft.JSInterop;
+using Soenneker.Blazor.Google.Analytics.Abstract;
+using Soenneker.Blazor.Utils.ResourceLoader.Abstract;
+using Soenneker.Extensions.ValueTask;
+using Soenneker.Utils.AsyncSingleton;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Soenneker.Blazor.Google.Analytics;
 
@@ -11,33 +14,40 @@ public sealed class GoogleAnalyticsInterop : IGoogleAnalyticsInterop
 {
     private readonly IJSRuntime _jsRuntime;
     private readonly ILogger<GoogleAnalyticsInterop> _logger;
+    private readonly IResourceLoader _resourceLoader;
 
-    public GoogleAnalyticsInterop(IJSRuntime jSRuntime, ILogger<GoogleAnalyticsInterop> logger)
+    private readonly AsyncSingleton _scriptInitializer;
+
+    private const string _modulePath = "Soenneker.Blazor.Google.Analytics/js/googleanalyticsinterop.js";
+    private const string _moduleName = "GoogleAnalyticsInterop";
+
+    public GoogleAnalyticsInterop(IJSRuntime jSRuntime, ILogger<GoogleAnalyticsInterop> logger, IResourceLoader resourceLoader)
     {
         _jsRuntime = jSRuntime;
         _logger = logger;
+        _resourceLoader = resourceLoader;
+
+        _scriptInitializer = new AsyncSingleton(async (token, _) =>
+        {
+            await _resourceLoader.ImportModuleAndWaitUntilAvailable(_modulePath, _moduleName, 100, token).NoSync();
+            return new object();
+        });
     }
 
-    public ValueTask Init(string tagId, bool log = false, CancellationToken cancellationToken = default)
+    public async ValueTask Init(string tagId, bool log = false, CancellationToken cancellationToken = default)
     {
         if (log)
             _logger.LogDebug("Initializing Google Analytics...");
 
-        // Does not import modules, load external scripts, etc for maximum injection speed
+        await _scriptInitializer.Init(cancellationToken).NoSync();
 
-        var script = $$"""
-                        var script = document.createElement('script');
-                        script.src = 'https://www.googletagmanager.com/gtag/js?id={{tagId}}';
-                        script.async = true;
-                        script.onload = function () {
-                            window.dataLayer = window.dataLayer || [];
-                            function gtag() { dataLayer.push(arguments); }
-                            gtag('js', new Date());
-                            gtag('config', '{{tagId}}');
-                        };
-                        document.head.appendChild(script);
-                       """;
+        await _jsRuntime.InvokeVoidAsync($"{_moduleName}.init", cancellationToken, tagId).NoSync();
+    }
 
-        return _jsRuntime.InvokeVoidAsync("eval", cancellationToken, script);
+    public async ValueTask DisposeAsync()
+    {
+        await _resourceLoader.DisposeModule(_modulePath).NoSync();
+
+        await _scriptInitializer.DisposeAsync().NoSync();
     }
 }
