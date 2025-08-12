@@ -2,8 +2,10 @@ using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 using Soenneker.Blazor.Google.Analytics.Abstract;
 using Soenneker.Blazor.Utils.ResourceLoader.Abstract;
+using Soenneker.Extensions.CancellationTokens;
 using Soenneker.Extensions.ValueTask;
 using Soenneker.Utils.AsyncSingleton;
+using Soenneker.Utils.CancellationScopes;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -20,6 +22,8 @@ public sealed class GoogleAnalyticsInterop : IGoogleAnalyticsInterop
 
     private const string _modulePath = "Soenneker.Blazor.Google.Analytics/js/googleanalyticsinterop.js";
     private const string _moduleName = "GoogleAnalyticsInterop";
+
+    private readonly CancellationScope _cancellationScope = new();
 
     public GoogleAnalyticsInterop(IJSRuntime jSRuntime, ILogger<GoogleAnalyticsInterop> logger, IResourceLoader resourceLoader)
     {
@@ -39,9 +43,14 @@ public sealed class GoogleAnalyticsInterop : IGoogleAnalyticsInterop
         if (log)
             _logger.LogDebug("Initializing Google Analytics...");
 
-        await _scriptInitializer.Init(cancellationToken).NoSync();
+        CancellationToken linked = _cancellationScope.CancellationToken.Link(cancellationToken, out CancellationTokenSource? source);
 
-        await _jsRuntime.InvokeVoidAsync($"{_moduleName}.init", cancellationToken, tagId).NoSync();
+        using (source)
+        {
+            await _scriptInitializer.Init(linked).NoSync();
+
+            await _jsRuntime.InvokeVoidAsync($"{_moduleName}.init", linked, tagId).NoSync();
+        }
     }
 
     public async ValueTask DisposeAsync()
@@ -49,5 +58,7 @@ public sealed class GoogleAnalyticsInterop : IGoogleAnalyticsInterop
         await _resourceLoader.DisposeModule(_modulePath).NoSync();
 
         await _scriptInitializer.DisposeAsync().NoSync();
+
+        await _cancellationScope.DisposeAsync().NoSync();
     }
 }
