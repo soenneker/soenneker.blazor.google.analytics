@@ -48,6 +48,6 @@
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.8" />
         <PackageReference Include="Soenneker.Blazor.Utils.ResourceLoader" Version="3.0.1492" />
         <PackageReference Include="Soenneker.Extensions.CancellationTokens" Version="3.0.2" />
-        <PackageReference Include="Soenneker.Utils.CancellationScopes" Version="3.0.3" />
+        <PackageReference Include="Soenneker.Utils.CancellationScopes" Version="3.0.4" />
     </ItemGroup>
 </Project>
