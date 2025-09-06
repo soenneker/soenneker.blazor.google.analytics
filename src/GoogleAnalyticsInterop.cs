@@ -33,7 +33,7 @@ public sealed class GoogleAnalyticsInterop : IGoogleAnalyticsInterop
 
         _scriptInitializer = new AsyncSingleton(async (token, _) =>
         {
-            await _resourceLoader.ImportModuleAndWaitUntilAvailable(_modulePath, _moduleName, 100, token).NoSync();
+            await _resourceLoader.ImportModuleAndWaitUntilAvailable(_modulePath, _moduleName, 100, token);
             return new object();
         });
     }
@@ -47,18 +47,18 @@ public sealed class GoogleAnalyticsInterop : IGoogleAnalyticsInterop
 
         using (source)
         {
-            await _scriptInitializer.Init(linked).NoSync();
+            await _scriptInitializer.Init(linked);
 
-            await _jsRuntime.InvokeVoidAsync($"{_moduleName}.init", linked, tagId).NoSync();
+            await _jsRuntime.InvokeVoidAsync($"{_moduleName}.init", linked, tagId);
         }
     }
 
     public async ValueTask DisposeAsync()
     {
-        await _resourceLoader.DisposeModule(_modulePath).NoSync();
+        await _resourceLoader.DisposeModule(_modulePath);
 
-        await _scriptInitializer.DisposeAsync().NoSync();
+        await _scriptInitializer.DisposeAsync();
 
-        await _cancellationScope.DisposeAsync().NoSync();
+        await _cancellationScope.DisposeAsync();
     }
 }
