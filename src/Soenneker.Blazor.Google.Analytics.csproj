@@ -46,7 +46,7 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.0-rc.2.25502.107" />
-        <PackageReference Include="Soenneker.Blazor.Utils.ResourceLoader" Version="4.0.1514" />
+        <PackageReference Include="Soenneker.Blazor.Utils.ResourceLoader" Version="4.0.1515" />
         <PackageReference Include="Soenneker.Extensions.CancellationTokens" Version="4.0.4" />
         <PackageReference Include="Soenneker.Utils.CancellationScopes" Version="4.0.12" />
     </ItemGroup>
