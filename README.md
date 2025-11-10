@@ -30,12 +30,14 @@ public static async Task Main(string[] args)
 @inject IGoogleAnalyticsInterop GoogleAnalyticsInterop
 ```
 
-3. Initialize the interop in `OnInitializedAsync` within `App.Razor` using your Google Analytics tag id
+3. Call the interop from `OnAfterRenderAsync` in `App.razor`.
 
 ```csharp
-protected override async Task OnInitializedAsync()
+protected override async Task OnAfterRenderAsync(bool firstRender)
 {
+    if (!firstRender)
+        return;
+
     await GoogleAnalyticsInterop.Init("your-key-here");
-    ...
 }
 ```
