@@ -3,11 +3,10 @@ using Microsoft.JSInterop;
 using Soenneker.Blazor.Google.Analytics.Abstract;
 using Soenneker.Blazor.Utils.ResourceLoader.Abstract;
 using Soenneker.Extensions.CancellationTokens;
-using Soenneker.Extensions.ValueTask;
-using Soenneker.Utils.AsyncSingleton;
 using Soenneker.Utils.CancellationScopes;
 using System.Threading;
 using System.Threading.Tasks;
+using Soenneker.Asyncs.Initializers;
 
 namespace Soenneker.Blazor.Google.Analytics;
 
@@ -18,7 +17,7 @@ public sealed class GoogleAnalyticsInterop : IGoogleAnalyticsInterop
     private readonly ILogger<GoogleAnalyticsInterop> _logger;
     private readonly IResourceLoader _resourceLoader;
 
-    private readonly AsyncSingleton _scriptInitializer;
+    private readonly AsyncInitializer _scriptInitializer;
 
     private const string _modulePath = "Soenneker.Blazor.Google.Analytics/js/googleanalyticsinterop.js";
     private const string _moduleName = "GoogleAnalyticsInterop";
@@ -31,10 +30,9 @@ public sealed class GoogleAnalyticsInterop : IGoogleAnalyticsInterop
         _logger = logger;
         _resourceLoader = resourceLoader;
 
-        _scriptInitializer = new AsyncSingleton(async (token, _) =>
+        _scriptInitializer = new AsyncInitializer(async token =>
         {
             await _resourceLoader.ImportModuleAndWaitUntilAvailable(_modulePath, _moduleName, 100, token);
-            return new object();
         });
     }
 
