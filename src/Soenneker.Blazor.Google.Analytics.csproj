@@ -16,7 +16,7 @@
         <AssemblyName>Soenneker.Blazor.Google.Analytics</AssemblyName>
         <PackageId>Soenneker.Blazor.Google.Analytics</PackageId>
         <PackageTags>blazor google analytics googleanalyticsinterop interop csharp dotnet c# .net</PackageTags>
-        <Copyright>Copyright © 2024-2025 Jake Soenneker</Copyright>
+        <Copyright>Copyright © 2024-2026 Jake Soenneker</Copyright>
         <Authors>Jake Soenneker</Authors>
         <Company>https://soenneker.com</Company>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
