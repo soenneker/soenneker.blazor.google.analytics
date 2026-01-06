@@ -32,9 +32,9 @@ public sealed class GoogleAnalyticsInterop : IGoogleAnalyticsInterop
         _scriptInitializer = new AsyncInitializer(InitializeScript);
     }
 
-    private async ValueTask InitializeScript(CancellationToken token)
+    private ValueTask InitializeScript(CancellationToken token)
     {
-        await _resourceLoader.ImportModuleAndWaitUntilAvailable(_modulePath, _moduleName, 100, token);
+        return _resourceLoader.ImportModuleAndWaitUntilAvailable(_modulePath, _moduleName, 100, token);
     }
 
     public async ValueTask Init(string tagId, bool log = false, CancellationToken cancellationToken = default)
