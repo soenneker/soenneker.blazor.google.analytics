@@ -29,11 +29,12 @@ public sealed class GoogleAnalyticsInterop : IGoogleAnalyticsInterop
         _jsRuntime = jSRuntime;
         _logger = logger;
         _resourceLoader = resourceLoader;
+        _scriptInitializer = new AsyncInitializer(InitializeScript);
+    }
 
-        _scriptInitializer = new AsyncInitializer(async token =>
-        {
-            await _resourceLoader.ImportModuleAndWaitUntilAvailable(_modulePath, _moduleName, 100, token);
-        });
+    private async ValueTask InitializeScript(CancellationToken token)
+    {
+        await _resourceLoader.ImportModuleAndWaitUntilAvailable(_modulePath, _moduleName, 100, token);
     }
 
     public async ValueTask Init(string tagId, bool log = false, CancellationToken cancellationToken = default)
@@ -47,7 +48,7 @@ public sealed class GoogleAnalyticsInterop : IGoogleAnalyticsInterop
         {
             await _scriptInitializer.Init(linked);
 
-            await _jsRuntime.InvokeVoidAsync($"{_moduleName}.init", linked, tagId);
+            await _jsRuntime.InvokeVoidAsync("GoogleAnalyticsInterop.init", linked, tagId);
         }
     }
 
