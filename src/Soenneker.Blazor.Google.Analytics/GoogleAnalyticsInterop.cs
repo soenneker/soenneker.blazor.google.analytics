@@ -1,40 +1,28 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 using Soenneker.Blazor.Google.Analytics.Abstract;
-using Soenneker.Blazor.Utils.ResourceLoader.Abstract;
+using Soenneker.Blazor.Utils.ModuleImport.Abstract;
 using Soenneker.Extensions.CancellationTokens;
 using Soenneker.Utils.CancellationScopes;
 using System.Threading;
 using System.Threading.Tasks;
-using Soenneker.Asyncs.Initializers;
 
 namespace Soenneker.Blazor.Google.Analytics;
 
 /// <inheritdoc cref="IGoogleAnalyticsInterop"/>
 public sealed class GoogleAnalyticsInterop : IGoogleAnalyticsInterop
 {
-    private readonly IJSRuntime _jsRuntime;
     private readonly ILogger<GoogleAnalyticsInterop> _logger;
-    private readonly IResourceLoader _resourceLoader;
+    private readonly IModuleImportUtil _moduleImportUtil;
 
-    private readonly AsyncInitializer _scriptInitializer;
-
-    private const string _modulePath = "Soenneker.Blazor.Google.Analytics/js/googleanalyticsinterop.js";
-    private const string _moduleName = "GoogleAnalyticsInterop";
+    private const string _modulePath = "/_content/Soenneker.Blazor.Google.Analytics/js/googleanalyticsinterop.js";
 
     private readonly CancellationScope _cancellationScope = new();
 
-    public GoogleAnalyticsInterop(IJSRuntime jSRuntime, ILogger<GoogleAnalyticsInterop> logger, IResourceLoader resourceLoader)
+    public GoogleAnalyticsInterop(ILogger<GoogleAnalyticsInterop> logger, IModuleImportUtil moduleImportUtil)
     {
-        _jsRuntime = jSRuntime;
         _logger = logger;
-        _resourceLoader = resourceLoader;
-        _scriptInitializer = new AsyncInitializer(InitializeScript);
-    }
-
-    private async ValueTask InitializeScript(CancellationToken token)
-    {
-        _ = await _resourceLoader.ImportModule(_modulePath, token);
+        _moduleImportUtil = moduleImportUtil;
     }
 
     public async ValueTask Init(string tagId, bool log = false, CancellationToken cancellationToken = default)
@@ -46,17 +34,14 @@ public sealed class GoogleAnalyticsInterop : IGoogleAnalyticsInterop
 
         using (source)
         {
-            await _scriptInitializer.Init(linked);
-
-            await _jsRuntime.InvokeVoidAsync("GoogleAnalyticsInterop.init", linked, tagId);
+            IJSObjectReference module = await _moduleImportUtil.GetContentModuleReference(_modulePath, linked);
+            await module.InvokeVoidAsync("init", linked, tagId);
         }
     }
 
     public async ValueTask DisposeAsync()
     {
-        await _resourceLoader.DisposeModule(_modulePath);
-
-        await _scriptInitializer.DisposeAsync();
+        await _moduleImportUtil.DisposeContentModule(_modulePath);
 
         await _cancellationScope.DisposeAsync();
     }

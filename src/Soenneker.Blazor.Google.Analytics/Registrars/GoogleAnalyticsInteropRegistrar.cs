@@ -1,7 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Soenneker.Blazor.Google.Analytics.Abstract;
-using Soenneker.Blazor.Utils.ResourceLoader.Registrars;
+using Soenneker.Blazor.Utils.ModuleImport.Registrars;
 
 namespace Soenneker.Blazor.Google.Analytics.Registrars;
 
@@ -15,7 +15,7 @@ public static class GoogleAnalyticsInteropRegistrar
     /// </summary>
     public static IServiceCollection AddGoogleAnalyticsInteropAsScoped(this IServiceCollection services)
     {
-        services.AddResourceLoaderAsScoped().TryAddScoped<IGoogleAnalyticsInterop, GoogleAnalyticsInterop>();
+        services.AddModuleImportUtilAsScoped().TryAddScoped<IGoogleAnalyticsInterop, GoogleAnalyticsInterop>();
         return services;
     }
 }
