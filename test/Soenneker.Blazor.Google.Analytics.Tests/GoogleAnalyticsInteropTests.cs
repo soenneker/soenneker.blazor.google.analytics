@@ -1,21 +1,19 @@
 using Soenneker.Blazor.Google.Analytics.Abstract;
-using Soenneker.Tests.FixturedUnit;
-using Xunit;
-
+using Soenneker.Tests.HostedUnit;
 
 namespace Soenneker.Blazor.Google.Analytics.Tests;
 
-[Collection("Collection")]
-public sealed class GoogleAnalyticsInteropTests : FixturedUnitTest
+[ClassDataSource<Host>(Shared = SharedType.PerTestSession)]
+public sealed class GoogleAnalyticsInteropTests : HostedUnitTest
 {
     private readonly IGoogleAnalyticsInterop _util;
 
-    public GoogleAnalyticsInteropTests(Fixture fixture, ITestOutputHelper output) : base(fixture, output)
+    public GoogleAnalyticsInteropTests(Host host) : base(host)
     {
         _util = Resolve<IGoogleAnalyticsInterop>(true);
     }
 
-    [Fact]
+    [Test]
     public void Default()
     {
 

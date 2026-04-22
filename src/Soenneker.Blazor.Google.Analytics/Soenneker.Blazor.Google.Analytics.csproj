@@ -1,7 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-
 <Project Sdk="Microsoft.NET.Sdk.Razor">
-
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
         <Nullable>enable</Nullable>
@@ -41,7 +38,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-
         <None Include="..\..\README.md" Pack="true" PackagePath="\" />
         <None Include="..\..\LICENSE" Pack="true" PackagePath="\" />
         <None Include="..\..\icon.png" Pack="true" PackagePath="\" />
@@ -52,4 +48,3 @@
         <PackageReference Include="Soenneker.Blazor.Utils.ModuleImport" Version="4.0.1796" />
     </ItemGroup>
 </Project>
-
