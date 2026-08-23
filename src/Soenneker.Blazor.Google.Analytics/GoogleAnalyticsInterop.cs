@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 using Soenneker.Blazor.Google.Analytics.Abstract;
+using Soenneker.Blazor.Google.Analytics.Models;
 using Soenneker.Blazor.Utils.ModuleImport.Abstract;
 using Soenneker.Extensions.CancellationTokens;
 using Soenneker.Utils.CancellationScopes;
@@ -25,10 +26,9 @@ public sealed class GoogleAnalyticsInterop : IGoogleAnalyticsInterop
         _moduleImportUtil = moduleImportUtil;
     }
 
-    public async ValueTask Init(string tagId, bool log = false, CancellationToken cancellationToken = default)
+    public async ValueTask Init(string tagId, CancellationToken cancellationToken = default)
     {
-        if (log)
-            _logger.LogDebug("Initializing Google Analytics...");
+        _logger.LogDebug("Initializing Google Analytics...");
 
         CancellationToken linked = _cancellationScope.CancellationToken.Link(cancellationToken, out CancellationTokenSource? source);
 
@@ -36,6 +36,61 @@ public sealed class GoogleAnalyticsInterop : IGoogleAnalyticsInterop
         {
             IJSObjectReference module = await _moduleImportUtil.GetContentModuleReference(_modulePath, linked);
             await module.InvokeVoidAsync("init", linked, tagId);
+        }
+    }
+
+    public async ValueTask SetDefaultConsent(GoogleAnalyticsConsentSettings settings, CancellationToken cancellationToken = default)
+    {
+        CancellationToken linked = _cancellationScope.CancellationToken.Link(cancellationToken, out CancellationTokenSource? source);
+
+        using (source)
+        {
+            IJSObjectReference module = await _moduleImportUtil.GetContentModuleReference(_modulePath, linked);
+            await module.InvokeVoidAsync("setDefaultConsent", linked, settings);
+        }
+    }
+
+    public async ValueTask UpdateConsent(GoogleAnalyticsConsentSettings settings, CancellationToken cancellationToken = default)
+    {
+        CancellationToken linked = _cancellationScope.CancellationToken.Link(cancellationToken, out CancellationTokenSource? source);
+
+        using (source)
+        {
+            IJSObjectReference module = await _moduleImportUtil.GetContentModuleReference(_modulePath, linked);
+            await module.InvokeVoidAsync("updateConsent", linked, settings);
+        }
+    }
+
+    public async ValueTask Config(string tagId, object? parameters = null, CancellationToken cancellationToken = default)
+    {
+        CancellationToken linked = _cancellationScope.CancellationToken.Link(cancellationToken, out CancellationTokenSource? source);
+
+        using (source)
+        {
+            IJSObjectReference module = await _moduleImportUtil.GetContentModuleReference(_modulePath, linked);
+            await module.InvokeVoidAsync("config", linked, tagId, parameters);
+        }
+    }
+
+    public async ValueTask Event(string name, object? parameters = null, CancellationToken cancellationToken = default)
+    {
+        CancellationToken linked = _cancellationScope.CancellationToken.Link(cancellationToken, out CancellationTokenSource? source);
+
+        using (source)
+        {
+            IJSObjectReference module = await _moduleImportUtil.GetContentModuleReference(_modulePath, linked);
+            await module.InvokeVoidAsync("event", linked, name, parameters);
+        }
+    }
+
+    public async ValueTask PageView(string? pageLocation = null, string? pageTitle = null, CancellationToken cancellationToken = default)
+    {
+        CancellationToken linked = _cancellationScope.CancellationToken.Link(cancellationToken, out CancellationTokenSource? source);
+
+        using (source)
+        {
+            IJSObjectReference module = await _moduleImportUtil.GetContentModuleReference(_modulePath, linked);
+            await module.InvokeVoidAsync("pageView", linked, pageLocation, pageTitle);
         }
     }
 
