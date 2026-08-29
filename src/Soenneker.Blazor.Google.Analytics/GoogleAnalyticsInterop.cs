@@ -5,6 +5,7 @@ using Soenneker.Blazor.Google.Analytics.Models;
 using Soenneker.Blazor.Utils.ModuleImport.Abstract;
 using Soenneker.Extensions.CancellationTokens;
 using Soenneker.Utils.CancellationScopes;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -28,6 +29,7 @@ public sealed class GoogleAnalyticsInterop : IGoogleAnalyticsInterop
 
     public async ValueTask Init(string tagId, CancellationToken cancellationToken = default)
     {
+        tagId = ValidateRequired(tagId, nameof(tagId));
         _logger.LogDebug("Initializing Google Analytics...");
 
         CancellationToken linked = _cancellationScope.CancellationToken.Link(cancellationToken, out CancellationTokenSource? source);
@@ -35,12 +37,27 @@ public sealed class GoogleAnalyticsInterop : IGoogleAnalyticsInterop
         using (source)
         {
             IJSObjectReference module = await _moduleImportUtil.GetContentModuleReference(_modulePath, linked);
-            await module.InvokeVoidAsync("init", linked, tagId);
+            await module.InvokeVoidAsync("init", linked, tagId, null);
+        }
+    }
+
+    public async ValueTask Init(string tagId, object parameters, CancellationToken cancellationToken = default)
+    {
+        tagId = ValidateRequired(tagId, nameof(tagId));
+        ArgumentNullException.ThrowIfNull(parameters);
+
+        CancellationToken linked = _cancellationScope.CancellationToken.Link(cancellationToken, out CancellationTokenSource? source);
+
+        using (source)
+        {
+            IJSObjectReference module = await _moduleImportUtil.GetContentModuleReference(_modulePath, linked);
+            await module.InvokeVoidAsync("init", linked, tagId, parameters);
         }
     }
 
     public async ValueTask SetDefaultConsent(GoogleAnalyticsConsentSettings settings, CancellationToken cancellationToken = default)
     {
+        ValidateConsent(settings);
         CancellationToken linked = _cancellationScope.CancellationToken.Link(cancellationToken, out CancellationTokenSource? source);
 
         using (source)
@@ -52,6 +69,7 @@ public sealed class GoogleAnalyticsInterop : IGoogleAnalyticsInterop
 
     public async ValueTask UpdateConsent(GoogleAnalyticsConsentSettings settings, CancellationToken cancellationToken = default)
     {
+        ValidateConsent(settings);
         CancellationToken linked = _cancellationScope.CancellationToken.Link(cancellationToken, out CancellationTokenSource? source);
 
         using (source)
@@ -63,6 +81,7 @@ public sealed class GoogleAnalyticsInterop : IGoogleAnalyticsInterop
 
     public async ValueTask Config(string tagId, object? parameters = null, CancellationToken cancellationToken = default)
     {
+        tagId = ValidateRequired(tagId, nameof(tagId));
         CancellationToken linked = _cancellationScope.CancellationToken.Link(cancellationToken, out CancellationTokenSource? source);
 
         using (source)
@@ -74,6 +93,7 @@ public sealed class GoogleAnalyticsInterop : IGoogleAnalyticsInterop
 
     public async ValueTask Event(string name, object? parameters = null, CancellationToken cancellationToken = default)
     {
+        name = ValidateRequired(name, nameof(name));
         CancellationToken linked = _cancellationScope.CancellationToken.Link(cancellationToken, out CancellationTokenSource? source);
 
         using (source)
@@ -92,6 +112,22 @@ public sealed class GoogleAnalyticsInterop : IGoogleAnalyticsInterop
             IJSObjectReference module = await _moduleImportUtil.GetContentModuleReference(_modulePath, linked);
             await module.InvokeVoidAsync("pageView", linked, pageLocation, pageTitle);
         }
+    }
+
+    private static string ValidateRequired(string value, string parameterName)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            throw new ArgumentException("The value cannot be null, empty, or whitespace.", parameterName);
+
+        return value.Trim();
+    }
+
+    private static void ValidateConsent(GoogleAnalyticsConsentSettings settings)
+    {
+        ArgumentNullException.ThrowIfNull(settings);
+
+        if (settings.WaitForUpdateMilliseconds < 0)
+            throw new ArgumentOutOfRangeException(nameof(settings), "WaitForUpdateMilliseconds cannot be negative.");
     }
 
     /// <summary>

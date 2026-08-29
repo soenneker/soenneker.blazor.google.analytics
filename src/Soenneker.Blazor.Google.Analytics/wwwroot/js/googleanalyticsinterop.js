@@ -37,13 +37,13 @@ function toConsentState(settings, includeWaitForUpdate) {
     return state;
 }
 
-export function init(tagId) {
+export function init(tagId, parameters) {
     if (!hasCommand("js")) {
         gtag("js", new Date());
     }
 
     if (!hasCommand("config", tagId)) {
-        gtag("config", tagId);
+        gtag("config", tagId, parameters || {});
     }
 
     if (hasGoogleTagScript()) {

@@ -33,6 +33,7 @@ public sealed class GoogleAnalyticsInteropTests : HostedUnitTest
 
         await _util.SetDefaultConsent(settings);
         await _util.Init("G-TEST");
+        await _util.Init("G-TEST-CONFIGURED", new { send_page_view = false });
         await _util.UpdateConsent(settings);
         await _util.Config("G-TEST", new { send_page_view = false });
         await _util.Event("test_event", new { value = 1 });

@@ -19,7 +19,16 @@ public interface IGoogleAnalyticsInterop : IAsyncDisposable
     ValueTask Init(string tagId, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Queues default Consent Mode V2 settings. Call before <see cref="Init"/>.
+    /// Initializes the Google tag with configuration parameters applied to its initial config command.
+    /// </summary>
+    /// <param name="tagId">Identifier of the tag to target.</param>
+    /// <param name="parameters">Parameters for the initial config command.</param>
+    /// <param name="cancellationToken">Token used to cancel the operation.</param>
+    /// <returns>A task that completes when Google Analytics is ready for use.</returns>
+    ValueTask Init(string tagId, object parameters, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Queues default Consent Mode V2 settings. Call before <see cref="Init(string, CancellationToken)"/>.
     /// </summary>
     /// <param name="settings">Settings to apply.</param>
     /// <param name="cancellationToken">Token used to cancel the operation.</param>

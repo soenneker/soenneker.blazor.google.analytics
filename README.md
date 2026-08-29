@@ -18,7 +18,9 @@ dotnet add package Soenneker.Blazor.Google.Analytics
 Register and inject the interop:
 
 ```csharp
-services.AddGoogleAnalyticsInteropAsScoped();
+using Soenneker.Blazor.Google.Analytics.Registrars;
+
+builder.Services.AddGoogleAnalyticsInteropAsScoped();
 ```
 
 ```razor
@@ -27,10 +29,16 @@ services.AddGoogleAnalyticsInteropAsScoped();
 @inject IGoogleAnalyticsInterop GoogleAnalyticsInterop
 ```
 
-Initialize the Google tag after the page becomes interactive:
+Initialize the Google tag after the page becomes interactive. In a component, that normally means the first `OnAfterRenderAsync` call:
 
 ```csharp
-await GoogleAnalyticsInterop.Init("G-XXXXXXXXXX");
+protected override async Task OnAfterRenderAsync(bool firstRender)
+{
+    if (!firstRender)
+        return;
+
+    await GoogleAnalyticsInterop.Init("G-XXXXXXXXXX");
+}
 ```
 
 Send events and client-side page views:
@@ -48,6 +56,23 @@ await GoogleAnalyticsInterop.PageView(
 ```
 
 Use `Config` when a destination needs additional configuration after initialization.
+
+## Client-side navigation
+
+Google's initial `config` command sends a page view by default. If the application also reports every Blazor navigation, disable that automatic view and send each view deliberately:
+
+```csharp
+await GoogleAnalyticsInterop.Init("G-XXXXXXXXXX", new
+{
+    send_page_view = false
+});
+
+await GoogleAnalyticsInterop.PageView(
+    pageLocation: Navigation.Uri,
+    pageTitle: "Orders");
+```
+
+Subscribe to `NavigationManager.LocationChanged` in a long-lived component and unsubscribe when that component is disposed. Avoid reporting both automatic and manual initial views, or the first page will be counted twice.
 
 ## Consent Mode V2
 
@@ -68,5 +93,11 @@ await GoogleAnalyticsInterop.Init("G-XXXXXXXXXX");
 ```
 
 Call `UpdateConsent` as soon as the visitor makes or changes their choice.
+
+Consent defaults must be queued before `Init`; otherwise the Google script and initial configuration are added first. Persist the visitor's choice according to the requirements that apply to your application, and do not represent denied consent as granted until the visitor opts in.
+
+## Data handling
+
+Event names and parameters are forwarded to Google's `gtag` queue. Do not send email addresses, names, access tokens, raw URLs containing secrets, or other personally identifiable/sensitive values. Treat analytics configuration as part of the application's privacy and content-security-policy design; loading the tag requires allowing the relevant Google origins.
 
 Use this package for a direct `gtag.js` integration. If the application deploys Google Analytics through Google Tag Manager, initialize the GTM package instead of independently initializing both loaders.
