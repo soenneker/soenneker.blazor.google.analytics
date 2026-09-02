@@ -1,3 +1,4 @@
+using System.Threading;
 using Microsoft.JSInterop;
 using Soenneker.Blazor.Google.Analytics.Abstract;
 using Soenneker.Blazor.Google.Analytics.Models;
@@ -20,7 +21,7 @@ public sealed class GoogleAnalyticsInteropTests : HostedUnitTest
     }
 
     [Test]
-    public async Task Analytics_commands_can_be_invoked()
+    public async Task Analytics_commands_can_be_invoked(CancellationToken cancellationToken)
     {
         var settings = new GoogleAnalyticsConsentSettings
         {
@@ -31,12 +32,12 @@ public sealed class GoogleAnalyticsInteropTests : HostedUnitTest
             WaitForUpdateMilliseconds = 500
         };
 
-        await _util.SetDefaultConsent(settings);
-        await _util.Init("G-TEST");
-        await _util.Init("G-TEST-CONFIGURED", new { send_page_view = false });
-        await _util.UpdateConsent(settings);
-        await _util.Config("G-TEST", new { send_page_view = false });
-        await _util.Event("test_event", new { value = 1 });
-        await _util.PageView("https://example.com/test", "Test");
+        await _util.SetDefaultConsent(settings, cancellationToken: cancellationToken);
+        await _util.Init("G-TEST", cancellationToken: cancellationToken);
+        await _util.Init("G-TEST-CONFIGURED", new { send_page_view = false }, cancellationToken: cancellationToken);
+        await _util.UpdateConsent(settings, cancellationToken: cancellationToken);
+        await _util.Config("G-TEST", new { send_page_view = false }, cancellationToken: cancellationToken);
+        await _util.Event("test_event", new { value = 1 }, cancellationToken: cancellationToken);
+        await _util.PageView("https://example.com/test", "Test", cancellationToken: cancellationToken);
     }
 }
