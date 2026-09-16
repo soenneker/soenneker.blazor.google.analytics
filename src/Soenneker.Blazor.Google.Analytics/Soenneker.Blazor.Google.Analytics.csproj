@@ -45,6 +45,6 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.12" />
-        <PackageReference Include="Soenneker.Blazor.Utils.ModuleImport" Version="4.0.1894" />
+        <PackageReference Include="Soenneker.Blazor.Utils.ModuleImport" Version="4.0.1895" />
     </ItemGroup>
 </Project>
