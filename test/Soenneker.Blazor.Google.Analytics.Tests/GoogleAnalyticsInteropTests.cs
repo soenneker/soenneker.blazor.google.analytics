@@ -21,7 +21,7 @@ public sealed class GoogleAnalyticsInteropTests : HostedUnitTest
     }
 
     [Test]
-    public async Task Analytics_commands_can_be_invoked(CancellationToken cancellationToken)
+    public async ValueTask Analytics_commands_can_be_invoked(CancellationToken cancellationToken)
     {
         var settings = new GoogleAnalyticsConsentSettings
         {
