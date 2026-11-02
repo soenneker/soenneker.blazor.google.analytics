@@ -17,7 +17,7 @@ public sealed class GoogleAnalyticsInterop : IGoogleAnalyticsInterop
     private readonly ILogger<GoogleAnalyticsInterop> _logger;
     private readonly IModuleImportUtil _moduleImportUtil;
 
-    private const string _modulePath = "_content/Soenneker.Blazor.Google.Analytics/js/googleanalyticsinterop.js";
+    private const string _modulePath = "_content/Soenneker.Blazor.Google.Analytics/js/googleanalyticsinterop.min.js";
 
     private readonly CancellationScope _cancellationScope = new();
 
