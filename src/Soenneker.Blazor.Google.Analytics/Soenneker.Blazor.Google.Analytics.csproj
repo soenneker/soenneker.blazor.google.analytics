@@ -51,6 +51,6 @@
         <PackageReference Include="Soenneker.Blazor.Utils.ModuleImport" Version="11.0.1944" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Soenneker.Gen.Web.Minifier" Version="11.0.67" PrivateAssets="all" />
+        <PackageReference Include="Soenneker.Gen.Web.Minifier" Version="11.0.68" PrivateAssets="all" />
     </ItemGroup>
 </Project>
